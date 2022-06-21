@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Exploratory Data Analysis of the opensource Sakila Database Using SQL &#8212; My Jupyter Book</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint single-page" id="site-navigation">
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/Sakila EDA using SQL.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/Sakila EDA using SQL.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Exploratory Data Analysis of the opensource Sakila Database Using SQL</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis-of-the-opensource-sakila-database-using-sql">
+<h1>Exploratory Data Analysis of the opensource Sakila Database Using SQL<a class="headerlink" href="#exploratory-data-analysis-of-the-opensource-sakila-database-using-sql" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p><strong>The Sakila Database is a free synthetic database modelling an international DVD renting chain store</strong></p>
+</div></blockquote>
+<p><strong>We will try to find the answers to the following 3 questions:</strong> <nb></p>
+<ol class="simple">
+<li><p><strong>Currently rented DVDs:</strong></p>
+<ol class="simple">
+<li><p>How many rentals do we have any currently rented by active or inactive users?</p></li>
+<li><p>If yes, Are there any active customers who might not return those DVDs? (First time customers without any previous successful returns)
+3.Provide a list of customers in possesion of rentals that have a high probaiblity of not returning them</p></li>
+</ol>
+</li>
+</ol>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#importing needed libs</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#creating the connection to the database, displaying the ERD diagram, and outputting a hyperlink to tables desc</span>
+<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;sqlite-sakila.db&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="s1">&#39;SakilaERD.png&#39;</span><span class="p">))</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;center&gt;&lt;a href=&quot;https://dev.mysql.com/doc/sakila/en/sakila-structure-tables.html&quot;&gt; </span><span class="se">\</span>
+<span class="s2">Details for all tables can be found here&lt;/a&gt;&lt;/center&gt;&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Sakila EDA using SQL_2_0.png" src="_images/Sakila EDA using SQL_2_0.png" />
+<div class="output text_html"><center><a href="https://dev.mysql.com/doc/sakila/en/sakila-structure-tables.html"> Details for all tables can be found here</a></center></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#a simple function to read an SQL query from the database into a dataframe, parse dates when needed, and returns the df</span>
+<span class="k">def</span> <span class="nf">DisplayData</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">con</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">date_cols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">col</span> <span class="ow">or</span> <span class="s1">&#39;last_update&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+            <span class="n">date_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">con</span><span class="p">,</span><span class="n">parse_dates</span><span class="o">=</span><span class="n">date_cols</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="2d432f2f-104d-42e0-9844-fd90a405747a" name="dc9eb819-0488-4565-866b-10202e205865" type="radio">
+</input><label class="sd-tab-label" for="2d432f2f-104d-42e0-9844-fd90a405747a">
+Question 1.A</label><div class="sd-tab-content docutils">
+<p>How many rentals do we have any currently rented by active or inactive users?</p>
+</div>
+<input id="096335e0-58fa-4248-9301-15e4cfffb2ea" name="dc9eb819-0488-4565-866b-10202e205865" type="radio">
+</input><label class="sd-tab-label" for="096335e0-58fa-4248-9301-15e4cfffb2ea">
+Logic</label><div class="sd-tab-content docutils">
+<p>Querying the “rental” and “customer” table to get a representation of the distribution of outstanding DVDs across active and inactive Users</p>
+</div>
+<input id="254e9f3e-7e90-49fc-b7e7-90e820caf8c9" name="dc9eb819-0488-4565-866b-10202e205865" type="radio">
+</input><label class="sd-tab-label" for="254e9f3e-7e90-49fc-b7e7-90e820caf8c9">
+SQL Code</label><div class="sd-tab-content docutils">
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">CASE</span>
+            <span class="k">WHEN</span> <span class="k">c</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">THEN</span> <span class="ss">&quot;Inactive Customer(s)&quot;</span>
+            <span class="k">WHEN</span> <span class="k">c</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">THEN</span> <span class="ss">&quot;Active Customer(s)&quot;</span>
+            <span class="k">END</span> <span class="k">AS</span> <span class="n">is_active</span>
+        <span class="p">,</span> <span class="k">Count</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">customer_id</span><span class="p">)</span> <span class="k">AS</span> <span class="n">total_outstanding_rentals</span>
+    <span class="k">From</span> <span class="n">rental</span> <span class="k">as</span> <span class="n">r</span><span class="p">,</span> <span class="n">customer</span> <span class="k">as</span> <span class="k">c</span>
+    <span class="k">WHERE</span> <span class="n">return_date</span> <span class="k">is</span> <span class="k">NULL</span>
+          <span class="k">AND</span> <span class="k">c</span><span class="p">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">customer_id</span>
+    <span class="k">group</span> <span class="k">by</span> <span class="n">is_active</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<input id="a70dc527-f4bd-4a55-abf8-2bb34ca10cdb" name="dc9eb819-0488-4565-866b-10202e205865" type="radio">
+</input><label class="sd-tab-label" for="a70dc527-f4bd-4a55-abf8-2bb34ca10cdb">
+Findings</label><div class="sd-tab-content docutils">
+<p>There are 179 outstanding rentals for active customers, and 4 rentals still with inactive customers!</p>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Displaying number of outstanding rentals</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">SELECT CASE</span>
+<span class="s2">            WHEN c.active = 0 THEN &quot;Inactive Customer(s)&quot;</span>
+<span class="s2">            WHEN c.active = 1 THEN &quot;Active Customer(s)&quot;</span>
+<span class="s2">            END AS is_active</span>
+<span class="s2">        , Count(r.customer_id) AS total_outstanding_rentals</span>
+<span class="s2">    From rental as r, customer as c</span>
+<span class="s2">    WHERE return_date is NULL</span>
+<span class="s2">          AND c.customer_id = r.customer_id</span>
+<span class="s2">    group by is_active</span>
+<span class="s2">    </span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">DisplayData</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_active</th>
+      <th>total_outstanding_rentals</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Active Customer(s)</td>
+      <td>179</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Inactive Customer(s)</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="c608f580-dec0-4853-b588-e7cb5bff50cf" name="30b5a98f-ef90-4fb0-b974-3959f0c350e9" type="radio">
+</input><label class="sd-tab-label" for="c608f580-dec0-4853-b588-e7cb5bff50cf">
+Question 1.B</label><div class="sd-tab-content docutils">
+<p>If yes, Are there any active customers who might not return those DVDs? (First time customers without any previous successful returns)</p>
+</div>
+<input id="ea50755d-31b8-4c43-bbd2-a7139662a380" name="30b5a98f-ef90-4fb0-b974-3959f0c350e9" type="radio">
+</input><label class="sd-tab-label" for="ea50755d-31b8-4c43-bbd2-a7139662a380">
+Logic</label><div class="sd-tab-content docutils">
+<p>Building two <strong>CTEs</strong> based on the “rental” table, when joined together with the “customers” table we can find out the number of previous successful rentals for each active customer</p>
+</div>
+<input id="2a2a547e-9513-43d0-b0e1-41616fe7a963" name="30b5a98f-ef90-4fb0-b974-3959f0c350e9" type="radio">
+</input><label class="sd-tab-label" for="2a2a547e-9513-43d0-b0e1-41616fe7a963">
+SQL Code</label><div class="sd-tab-content docutils">
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="n">outstanding</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="n">customer_id</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">outstanding_rentals</span>
+            <span class="k">From</span> <span class="n">rental</span>
+            <span class="k">WHERE</span> <span class="n">return_date</span> <span class="k">is</span> <span class="k">NULL</span>
+            <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">customer_id</span>
+<span class="p">)</span>
+<span class="p">,</span> <span class="n">returned</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="n">customer_id</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">succussful_returns</span>
+            <span class="k">From</span> <span class="n">rental</span>
+            <span class="k">WHERE</span> <span class="n">return_date</span> <span class="k">is</span> <span class="k">not</span> <span class="k">NULL</span>
+            <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">customer_id</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="k">Distinct</span> <span class="n">r</span><span class="p">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">o</span><span class="p">.</span><span class="n">outstanding_rentals</span><span class="p">,</span> <span class="n">r</span><span class="p">.</span><span class="n">succussful_returns</span>
+    <span class="k">FROM</span> <span class="n">returned</span> <span class="k">as</span> <span class="n">r</span>
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">customer</span> <span class="k">AS</span> <span class="k">c</span>
+        <span class="k">ON</span> <span class="k">c</span><span class="p">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">customer_id</span> <span class="k">AND</span> <span class="k">c</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">outstanding</span> <span class="k">AS</span> <span class="n">o</span>
+        <span class="k">ON</span> <span class="k">c</span><span class="p">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">customer_id</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">succussful_returns</span> <span class="k">ASC</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<input id="9ac595fd-8513-40a2-adb8-59b29453e663" name="30b5a98f-ef90-4fb0-b974-3959f0c350e9" type="radio">
+</input><label class="sd-tab-label" for="9ac595fd-8513-40a2-adb8-59b29453e663">
+Findings</label><div class="sd-tab-content docutils">
+<p>It’s Evident that all active customers have at least 18 previous successful rents that they have returned, so it’s not probable that they will not return the currently rented items.</p>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Checking the number of previous successful returns for customers with current outstanding rentals</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH outstanding AS (</span>
+<span class="s2">    SELECT customer_id,count(customer_id) as outstanding_rentals</span>
+<span class="s2">            From rental</span>
+<span class="s2">            WHERE return_date is NULL</span>
+<span class="s2">            GROUP BY customer_id</span>
+<span class="s2">)</span>
+<span class="s2">, returned AS (</span>
+<span class="s2">    SELECT customer_id,count(customer_id) as succussful_returns</span>
+<span class="s2">            From rental</span>
+<span class="s2">            WHERE return_date is not NULL</span>
+<span class="s2">            GROUP BY customer_id</span>
+<span class="s2">)</span>
+
+<span class="s2">SELECT Distinct r.customer_id as active_customer_id, o.outstanding_rentals, r.succussful_returns</span>
+<span class="s2">    FROM returned as r</span>
+<span class="s2">    INNER JOIN customer AS c</span>
+<span class="s2">        ON c.customer_id = r.customer_id AND c.active = 1</span>
+<span class="s2">    INNER JOIN outstanding AS o</span>
+<span class="s2">        ON c.customer_id = o.customer_id</span>
+<span class="s2">    ORDER BY succussful_returns ASC;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">DisplayData</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>active_customer_id</th>
+      <th>outstanding_rentals</th>
+      <th>succussful_returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>525</td>
+      <td>1</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>548</td>
+      <td>1</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>162</td>
+      <td>1</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>191</td>
+      <td>1</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>355</td>
+      <td>1</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>150</th>
+      <td>295</td>
+      <td>1</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>410</td>
+      <td>1</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>152</th>
+      <td>75</td>
+      <td>3</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>153</th>
+      <td>178</td>
+      <td>1</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>154</th>
+      <td>236</td>
+      <td>1</td>
+      <td>41</td>
+    </tr>
+  </tbody>
+</table>
+<p>155 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="83ac4e67-55d5-4878-9ec3-6f9decb51506" name="db605987-a13d-4c20-90d5-3d53da7bd4a8" type="radio">
+</input><label class="sd-tab-label" for="83ac4e67-55d5-4878-9ec3-6f9decb51506">
+Question 1.C</label><div class="sd-tab-content docutils">
+<p>Provide a list of customers in possesion of rentals that have a high probaiblity of not returning them</p>
+</div>
+<input id="e81c2d1b-3d87-40f6-bcb0-79823410a67d" name="db605987-a13d-4c20-90d5-3d53da7bd4a8" type="radio">
+</input><label class="sd-tab-label" for="e81c2d1b-3d87-40f6-bcb0-79823410a67d">
+Logic</label><div class="sd-tab-content docutils">
+<blockquote>
+<div><p>Because we established that active users have a low probability of not returning the book, we will only Query the inactive customers data. <br>
+This will be done by using the “outstanding” <strong>CTE</strong> That we used before, joined with the “customer” table as well as all the other tables that contain data about the address (“address”, “city”, “country”)</p>
+</div></blockquote>
+</div>
+<input id="7e233dec-b3f2-4c06-9704-e617ecbc2f21" name="db605987-a13d-4c20-90d5-3d53da7bd4a8" type="radio">
+</input><label class="sd-tab-label" for="7e233dec-b3f2-4c06-9704-e617ecbc2f21">
+SQL Code</label><div class="sd-tab-content docutils">
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="n">outstanding</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="n">customer_id</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">outstanding_rentals</span>
+            <span class="k">From</span> <span class="n">rental</span>
+            <span class="k">WHERE</span> <span class="n">return_date</span> <span class="k">is</span> <span class="k">NULL</span>
+            <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">customer_id</span>
+<span class="p">)</span>
+<span class="p">,</span> <span class="n">returned</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="n">customer_id</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">succussful_returns</span>
+            <span class="k">From</span> <span class="n">rental</span>
+            <span class="k">WHERE</span> <span class="n">return_date</span> <span class="k">is</span> <span class="k">not</span> <span class="k">NULL</span>
+            <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">customer_id</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="k">Distinct</span> <span class="n">r</span><span class="p">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">o</span><span class="p">.</span><span class="n">outstanding_rentals</span><span class="p">,</span> <span class="n">r</span><span class="p">.</span><span class="n">succussful_returns</span>
+    <span class="k">FROM</span> <span class="n">returned</span> <span class="k">as</span> <span class="n">r</span>
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">customer</span> <span class="k">AS</span> <span class="k">c</span>
+        <span class="k">ON</span> <span class="k">c</span><span class="p">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">customer_id</span> <span class="k">AND</span> <span class="k">c</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">outstanding</span> <span class="k">AS</span> <span class="n">o</span>
+        <span class="k">ON</span> <span class="k">c</span><span class="p">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">customer_id</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">succussful_returns</span> <span class="k">ASC</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<input id="6bb63da3-6c5c-4fa5-981e-c4d08a340178" name="db605987-a13d-4c20-90d5-3d53da7bd4a8" type="radio">
+</input><label class="sd-tab-label" for="6bb63da3-6c5c-4fa5-981e-c4d08a340178">
+Findings</label><div class="sd-tab-content docutils">
+<p>we can even expand more on this data by including the store, along with the manager’s contact info.</p>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Checking the number of prvious successful returns for customers with current outstanding rentals</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH outstanding AS (</span>
+<span class="s2">    SELECT customer_id,count(customer_id) as outstanding_rentals</span>
+<span class="s2">            From rental</span>
+<span class="s2">            WHERE return_date is NULL</span>
+<span class="s2">            GROUP BY customer_id</span>
+<span class="s2">), customer_data AS (</span>
+<span class="s2">    SELECT cu.customer_id,</span>
+<span class="s2">           cu.first_name,</span>
+<span class="s2">           cu.last_name,</span>
+<span class="s2">           cu.email,</span>
+<span class="s2">           a.address,</span>
+<span class="s2">           ci.city,</span>
+<span class="s2">           co.country</span>
+<span class="s2">    FROM customer AS cu</span>
+<span class="s2">    LEFT JOIN address AS a</span>
+<span class="s2">        ON cu.address_id = a.address_id</span>
+<span class="s2">    LEFT JOIN city AS ci</span>
+<span class="s2">        ON a.city_id = ci.city_id</span>
+<span class="s2">    LEFT JOIN country AS co</span>
+<span class="s2">        ON co.country_id = ci.country_id</span>
+<span class="s2">    WHERE cu.active = 0</span>
+<span class="s2">)</span>
+
+<span class="s2">SELECT cd.*, o.outstanding_rentals</span>
+<span class="s2">FROM customer_data AS cd, outstanding as o</span>
+<span class="s2">where o.customer_id = cd.customer_id</span>
+<span class="s2">ORDER BY o.outstanding_rentals DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">DisplayData</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>email</th>
+      <th>address</th>
+      <th>city</th>
+      <th>country</th>
+      <th>outstanding_rentals</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>64</td>
+      <td>JUDITH</td>
+      <td>COX</td>
+      <td>JUDITH.COX@sakilacustomer.org</td>
+      <td>1966 Amroha Avenue</td>
+      <td>Daxian</td>
+      <td>China</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>315</td>
+      <td>KENNETH</td>
+      <td>GOODEN</td>
+      <td>KENNETH.GOODEN@sakilacustomer.org</td>
+      <td>1542 Lubumbashi Boulevard</td>
+      <td>Bat Yam</td>
+      <td>Israel</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>534</td>
+      <td>CHRISTIAN</td>
+      <td>JUNG</td>
+      <td>CHRISTIAN.JUNG@sakilacustomer.org</td>
+      <td>949 Allende Lane</td>
+      <td>Amroha</td>
+      <td>India</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>592</td>
+      <td>TERRANCE</td>
+      <td>ROUSH</td>
+      <td>TERRANCE.ROUSH@sakilacustomer.org</td>
+      <td>42 Fontana Avenue</td>
+      <td>Szkesfehrvr</td>
+      <td>Hungary</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By The Jupyter Book community<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
